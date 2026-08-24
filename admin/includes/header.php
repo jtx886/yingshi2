@@ -3,7 +3,7 @@
  * 管理后台公共头部
  */
 if (!defined('ROOT_PATH')) {
-    require_once dirname(__FILE__) . '/../config/config.php';
+    require_once dirname(__FILE__) . '/../../config/config.php';
 }
 require_once ROOT_PATH . '/includes/functions.php';
 

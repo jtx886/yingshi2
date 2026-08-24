@@ -7,6 +7,8 @@ require_once ROOT_PATH . '/includes/functions.php';
 require_once ROOT_PATH . '/api/tmdb.php';
 require_once ROOT_PATH . '/api/playsource.php';
 
+$currentUser = current_user();
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $type = isset($_GET['type']) ? trim($_GET['type']) : 'movie';
 if (!$id) redirect(BASE_URL . '/index.php');

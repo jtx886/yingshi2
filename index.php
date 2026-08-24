@@ -10,6 +10,9 @@ $pageTitle = '首页';
 $currentPage = 'home';
 $showAnnouncement = true;
 
+// 提前获取当前用户（后面第122、143行会用到，避免 header.php 包含前就使用导致未定义）
+$currentUser = current_user();
+
 $tmdb = new TMDBApi();
 
 // 获取轮播图（Trending/Hero Banner）

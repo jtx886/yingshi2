@@ -6,6 +6,8 @@ require_once dirname(__FILE__) . '/config/config.php';
 require_once ROOT_PATH . '/includes/functions.php';
 require_once ROOT_PATH . '/api/tmdb.php';
 
+$currentUser = current_user();
+
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $type = isset($_GET['type']) ? trim($_GET['type']) : 'all';

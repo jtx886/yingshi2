@@ -10,7 +10,8 @@ ini_set('display_errors', 1); // 部署后建议改 0，错误保存在服务器
 ini_set('log_errors', 1);
 
 // ====== 超全局变量兼容初始化（CLI/低版本PHP/特殊服务器环境缺失时兜底） ======
-if (!is_array($_SERVER))    $_SERVER    = array();
+// $_SERVER 初始化
+if (!isset($_SERVER) || !is_array($_SERVER)) $_SERVER = array();
 if (!isset($_SERVER['REQUEST_METHOD']))  $_SERVER['REQUEST_METHOD']  = 'GET';
 if (!isset($_SERVER['REQUEST_URI']))     $_SERVER['REQUEST_URI']     = '/';
 if (!isset($_SERVER['PHP_SELF']))        $_SERVER['PHP_SELF']        = '/index.php';
@@ -23,13 +24,13 @@ if (!isset($_SERVER['SCRIPT_NAME']))     $_SERVER['SCRIPT_NAME']     = '/index.p
 if (!isset($_SERVER['HTTP_USER_AGENT'])) $_SERVER['HTTP_USER_AGENT'] = '';
 if (!isset($_SERVER['HTTP_REFERER']))    $_SERVER['HTTP_REFERER']    = '';
 if (!isset($_SERVER['QUERY_STRING']))    $_SERVER['QUERY_STRING']    = '';
-if (!is_array($_GET))     $_GET     = array();
-if (!is_array($_POST))    $_POST    = array();
-if (!is_array($_COOKIE))  $_COOKIE  = array();
-if (!is_array($_SESSION)) $_SESSION = array();
-if (!is_array($_REQUEST)) $_REQUEST = array_merge($_GET, $_POST, $_COOKIE);
-if (!is_array($_FILES))   $_FILES   = array();
-if (!is_array($_ENV))     $_ENV     = array();
+// 其他超全局（$_SESSION 特殊：必须在 session_start() 后才会注册为全局，所以这里只初始化其他的，$_SESSION 留到 session_start() 之后再处理）
+if (!isset($_GET)    || !is_array($_GET))    $_GET    = array();
+if (!isset($_POST)   || !is_array($_POST))   $_POST   = array();
+if (!isset($_COOKIE) || !is_array($_COOKIE)) $_COOKIE = array();
+if (!isset($_REQUEST)|| !is_array($_REQUEST))$_REQUEST= array_merge($_GET, $_POST, $_COOKIE);
+if (!isset($_FILES)  || !is_array($_FILES))  $_FILES  = array();
+if (!isset($_ENV)    || !is_array($_ENV))    $_ENV    = array();
 
 // ====== 全局错误/异常兜底：避免白屏和 500 错误 ======
 function jay_error_handler($errno, $errstr, $errfile, $errline) {
@@ -311,6 +312,10 @@ if (session_status() == PHP_SESSION_NONE) {
     ini_set('session.cookie_lifetime', SESSION_LIFETIME);
     ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
     session_start();
+}
+// $_SESSION 必须在 session_start() 之后才可用，这里补兜底
+if (!isset($_SESSION) || !is_array($_SESSION)) {
+    $_SESSION = array();
 }
 
 // 自动加载函数（兼容 PHP 5.2：不使用匿名函数）
